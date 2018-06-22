@@ -1,0 +1,22 @@
+>I think that there are a few methods of movement that could see some success in TwinDuel:
+	> Circle/Collapse
+	  - Simple enough.  Your bots target one of the enemies at the same time. Progressively get closer(without diving).  Repeat for other enemy bot.
+	> Retreat/Dodge
+	  - A more conservative approach.  Likely vulnerable to the above tactic.  Possible methods of countering above? not sure.
+	  - Each bot takes an different corner or side.  Primarily focus on avoiding enemy fire and self collisions.  Seems safe at a glance, but is vulnerable to divide-and-conquer tactics like Circle/Collapse
+	> Mirror/Reactive Movers with wall smoothing
+	  - Idea completely off the top of my head.  No idea if this would actually succeed
+	  - Goal is to counter Circle/Collapse movement.  When they drive at you, you drive away.  
+	> AntiDivers
+	  - A possibly safe alternative to Circle/Collapse bots.
+	  - Prefer to stay away from the enemy and dodge as in melee, but, if they detect diving movement, immediately close in on the enemy with lower energy.  Attempt to RAM-Kill if sum of our energy is greater than sum of enemy energy.
+	  - Attempt to position themselves so that one of the enemy bots would have to shoot through it's partner in order to reliably hit them.
+	> Sword & Shield
+	  - One bot acts as a Bullet Shield, the other fires at the enemies.
+	  - With this setup it may be beneficial to have both bots be normal robots (not drones), so that 100% scan coverage can be had of the enemy team, allowing for accurate bullet shielding.
+	  - Information about each enemy bot would be sent throuogh messages, along with each bot's selected scan target.
+	  - Would need a metric for detecting bullet shield effectivness.  If below a threshold, Shield should begin aiding Sword with firing at enemies.
+	  - If an enemy Dive is detected, react as AntiDivers would.
+> Self notes
+  > what happens when you try to move between Divers?
+  > Find how to make vscode auto compile/build when you save your .java files
