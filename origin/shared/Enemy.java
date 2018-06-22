@@ -65,7 +65,9 @@ public class Enemy
 	}
 	public double getTurn()
 	{
-		double prevHeading = getState(cIndex()-1).getHeading();
+		double prevHeading = 0;
+		if (_states.size() > 1)
+			prevHeading = getState(cIndex()-1).getHeading();
 		return  cState.getHeading() - prevHeading;
 	}
 	

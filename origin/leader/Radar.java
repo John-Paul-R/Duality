@@ -22,15 +22,21 @@ public class Radar
 	
 	public void execute() 
 	{
-/*		Enemy target = _data.getTargetEnemy();
+		Enemy target = _data.getTargetEnemy();
 		final double FACTOR = 2.1;
-		if (target != null && target.getTime() == _data.getSelf().getTime())
+		
+		if (_self.getOthers()-_self.getTeammates().length > 1)
+			oldestScanned();
+		else if (target != null && target.getTime() == _data.getSelf().getTime())
     	{
 			double absBearing = target.getBearing();
 			_self.setTurnRadarRightRadians( FACTOR * robocode.util.Utils.normalRelativeAngle(absBearing - _self.getRadarHeadingRadians()) );
     	}
-		else*/
-		oldestScanned();
+		else
+		{
+			_self.setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
+		}
+			
 	}
 
 
@@ -42,7 +48,7 @@ public class Radar
 		long currentTime = _self.getTime();
 		String nOldestScannedName = _data.getOldestName();
 		Enemy nOldestScanned = _data.getEnemy(nOldestScannedName);
-		System.out.println("HI THERE");
+
 		turnAmountRemaining -= (Math.PI/4);
 		if (nOldestScanned != null)
 		{

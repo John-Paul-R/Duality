@@ -39,7 +39,7 @@ public class Duality_Leader extends TeamRobot
 			_radar.execute();
 			LeaderMessage message = new LeaderMessage();
 			try {
-				Point2D.Double targetCoord = _data.getTargetEnemy().getLocation();
+				Point2D.Double targetCoord = _data.getTargetEnemy().getLocation();//Control.getAimLocation(_data.getTargetEnemy(), this);
 				message.setAim(targetCoord);
 				Control.aimTo(targetCoord, this);
 			} catch (NullPointerException e)
@@ -49,11 +49,16 @@ public class Duality_Leader extends TeamRobot
 			message.setDest(new Point2D.Double(this.getBattleFieldWidth()/2, this.getBattleFieldHeight()/2));
 			
 			try {
-				broadcastMessage(message);
+				sendMessage(getTeammates()[0], message);
+				//System.out.println("Sending LeaderMessage");
 			} catch (IOException e) {
 				e.printStackTrace();
+				System.out.println("Failed to send LeaderMessage");
 			}
-			
+			if (getGunTurnRemaining() < Math.PI/4 && getGunHeat() == 0 && _data.getTargetEnemy() != null)
+			{
+				setFire(1.9);
+			}
 			execute();
         }
     }
