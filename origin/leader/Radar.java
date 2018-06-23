@@ -3,18 +3,16 @@ package origin.leader;
 import java.awt.geom.Point2D;
 import java.util.concurrent.ConcurrentHashMap;
 
-
-import origin.shared.DataManager;
 import robocode.Rules;
 import origin.shared.Enemy;
-import origin.twin.Duality_Leader;
+import origin.twin.DualityLeader;
 
 public class Radar
 {
-	private Duality_Leader _self;
+	private DualityLeader _self;
 	private DataManager _data;
 	
-	public Radar(Duality_Leader self, DataManager data)
+	public Radar(DualityLeader self, DataManager data)
 	{
 		_self = self;
 		_data = data;

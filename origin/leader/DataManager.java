@@ -1,6 +1,10 @@
-package origin.shared;
+package origin.leader;
 
-import origin.twin.Duality_Leader;
+import origin.shared.BotState;
+import origin.shared.DroneMessage;
+import origin.shared.Enemy;
+import origin.shared.EnemyState;
+import origin.twin.DualityLeader;
 
 import java.awt.geom.Point2D;
 import java.util.Collections;
@@ -23,6 +27,7 @@ import robocode.MessageEvent;
 import robocode.MouseEvent;
 import robocode.PaintEvent;
 import robocode.RobotDeathEvent;
+import robocode.RobotStatus;
 import robocode.ScannedRobotEvent;
 import robocode.SkippedTurnEvent;
 import robocode.StatusEvent;
@@ -40,11 +45,12 @@ public class DataManager
 	private String _targetName;
 	public DataManager() {}
 	
-	public void init(Duality_Leader self) 
+	public void init(DualityLeader self) 
 	{
 		_self = self;
 		_enemies = new HashMap<String, Enemy>();
 		_selfData = new LinkedList<BotState>();
+		_droneData = new LinkedList<DroneMessage>();
 	}
 	
 	//Do
@@ -151,7 +157,21 @@ public class DataManager
 	{
 		_droneData.add((DroneMessage) e.getMessage());
 	}
-	
+	public RobotStatus getDroneState()
+	{
+
+		if (_droneData.size() > 0)
+		{
+			RobotStatus lastStatus = _droneData.getLast().getStatus();
+			if (lastStatus != null)
+			{
+				return lastStatus;
+			}
+		}
+				
+		return null;
+	}
+
 	public void onBattleEnded(BattleEndedEvent e) {}
 	public void onBulletHitBullet(BulletHitBulletEvent e) {}
 	public void onBulletHit(BulletHitEvent e) {}

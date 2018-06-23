@@ -1,5 +1,8 @@
 package origin.twin;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 
@@ -19,15 +22,14 @@ import robocode.PaintEvent;
 import robocode.StatusEvent;
 import robocode.TeamRobot;
 
-public class Duality_Spectre extends TeamRobot implements Droid
+public class DualitySpectre extends TeamRobot implements Droid
 {
 	private DroneMessage md = new DroneMessage();
 	private LeaderMessage lm = null;
-    private String format;
+	private Point2D.Double dest = null, aim = null;
+
     public void run()
     {
-		format = "[%d] %s\n";
-
     	for(;;)
     	{
 			//For message ordering, set onStatus to be the last event called in the drone bot.
@@ -36,25 +38,29 @@ public class Duality_Spectre extends TeamRobot implements Droid
 			//After doing research, if the messages are indeed always handled in the same order, then you must make sure that the message is sent fromt the drone before onMessage is processed in the server.  Check when that is.  If it is after all of the other events, good! that works as is.  Just thought about this. Event ordering actually fixes this problem, I think.
 			//False alarm.  Just order the leader's event to come after the drone sends the message and it *should* be fine (at least in my head...)  
 
-    		//set target from leader 
-    		if (lm != null)
-    		{
-    			if (lm.getAim() != null)
-    				System.out.println("AIM RECEIVED");
-    			if (lm.getDest() != null)
-    				System.out.println("DEST RECEIVED");
-    		}
-    			
-    		/*try {
-    			Control.aimTo(lm.getAim(), this);
-        		Control.goTo(lm.getDest(), this);	
-        	} catch (NullPointerException e) {
-        		System.out.printf(format, "No LeaderMessage");
-			}*/
+    		//set target from leader     			
     		try {
-				broadcastMessage(md);
+    			Control.aimTo(lm.getAim(), this);
+        		if (getRadarTurnRemainingRadians() < Math.PI/8)
+        		{
+        			setFire(1.9);
+        		}
+        		if (lm.getDest() != null)
+        			dest = lm.getDest();        		
+        	} catch (NullPointerException e) {
+			}
+    		if (dest != null)
+    		{
+        		Control.goTo(dest, this);
+    		}
+    		
+    		try {
+				sendMessage(getTeammates()[0], md);
+				System.out.println("sending Message to " + getTeammates()[0]);
 			} catch (IOException e) {
 				e.printStackTrace();
+				System.out.println("Failed to send message");
+
 			}
     		md = new DroneMessage();
     		lm = null;
@@ -67,7 +73,6 @@ public class Duality_Spectre extends TeamRobot implements Droid
     public void onMessageReceived(MessageEvent e)
     {
     	lm = (LeaderMessage) e.getMessage();
-    	System.out.printf(format, getTime(), "Message Recieved");
     }
 	public void onBulletHitBullet(BulletHitBulletEvent e) 	{md.onBulletHitBullet(e);}
 	public void onBulletHit(BulletHitEvent e) 				{md.onBulletHit(e);}
@@ -75,7 +80,19 @@ public class Duality_Spectre extends TeamRobot implements Droid
 	public void onDeath(DeathEvent e) 						{md.onDeath(e);}
 	public void onHitByBullet(HitByBulletEvent e) 			{md.onHitByBullet(e);}
 	public void onHitRobot(HitRobotEvent e) 				{md.onHitRobot(e);}
-	public void onHitWall(HitWallEvent e) 					{md.onHitWall(e);}
-	public void onPaint(PaintEvent e) 						{}
-	public void onStatus(StatusEvent e)						{md.onStatus(e);}
+	public void onHitWall(HitWallEvent e) 					{}
+	@Override
+	public void onPaint(Graphics2D g) 						
+	{
+		
+		g.setColor(new Color(255, 255, 255));
+		double destRad = 8;
+		if (dest != null)
+		{
+			g.fillOval((int) (dest.getX()-destRad), (int) (dest.getY()-destRad), (int) (destRad*2), (int) (destRad*2));
+			System.out.println("PAINTING");
+
+		}
+	}
+	public void onStatus(StatusEvent e)						{md.onStatus(e.getStatus(), e.getTime()); }
 }
